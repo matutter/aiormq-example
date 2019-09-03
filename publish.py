@@ -4,9 +4,9 @@ import aiormq
 import json
 
 async def on_message(message):
-  print(f'[x] Received message {message.body}')
+  print(f'[AIORMQ] Received message {message.body}')
   await asyncio.sleep(2) 
-  print('An async operation completed')
+  print('[AIORMQ] An async operation completed')
 
 async def main():
   data       = { 'data': 0 }
@@ -33,7 +33,7 @@ async def main():
     while True:
       data['data'] += 1
       await asyncio.sleep(1)
-      print(f'[x] Sending "{data}"')
+      print(f'[AIORMQ] Sending "{data}"')
       await channel.basic_publish(
         bytes(json.dumps(data), 'utf-8'),
         routing_key=QUEUE_NAME)
@@ -42,7 +42,7 @@ async def main():
   task = loop.create_task(on_interval())
 
   def stop_interval():
-    print('[ ] Stopping task...')
+    print('[AIORMQ] Stopping task...')
     task.cancel()
 
   loop.call_later(10, stop_interval)
